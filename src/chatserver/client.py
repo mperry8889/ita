@@ -12,10 +12,6 @@ def ACK(sobj):
 def ERR(sobj):
     SEND(sobj, "ERROR")    
 
-class State(object):
-    NEW = 0
-    INUSE = 1
-    DISCONNECTED = 2
 
 class IChatClient(Interface):
     """This interface forces implementing classes to have a method available to 
@@ -30,7 +26,6 @@ class Client():
     """This is a dumb pass-through client.  The complexity is on the server side"""
     implements(IChatClient)
     __sobj = None
-    __state = State.NEW
     
     # this nickname tracking is a speedup, so that bogus commands don't get sent to the
     # server side and cost a lot of processing power in terms of dict lookups
@@ -45,9 +40,6 @@ class Client():
     
     def getNickname(self):
         return self.__nickname
-
-    def getState(self):
-        return self.__state
     
     
     def LOGIN(self, args):
@@ -60,7 +52,6 @@ class Client():
         try:
             Server.login(nickname, self)
             self.__nickname = nickname
-            self.__state = State.INUSE
             ACK(self.__sobj)
         except:
             ERR(self.__sobj)
@@ -75,7 +66,6 @@ class Client():
         try:
             Server.logout(self.__nickname, self)
             self.__nickname = None
-            self.__state = State.DISCONNECTED
             ACK(self.__sobj)
         except:
             ERR(self.__sobj) 
