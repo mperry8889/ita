@@ -19,6 +19,8 @@ port = 6667
 
 def _logOut(sock):
     ChatServer.logout(socklist[sock].getNickname(), socklist[sock])
+    socklist.pop(sock)
+    sock.close()
 
 # set up the main listening socket
 def _listen(port):
@@ -57,8 +59,6 @@ def loop():
                         select.select([sock], [], [], 0)
                     except:
                         _logOut(sock)
-                        socklist.pop(sock)
-                        sock.close()
                         break
     try:                
         for sock in read:
@@ -78,21 +78,20 @@ def loop():
                         # who sends 1KB of data to a chat server?
                         if len(data) == 1024:
                             _logOut(sock)
-                            socklist.pop(sock)
-                            sock.close()
                         if not ValidateCommand(data):
                             ERR(sock)
                         else:
                             socklist[sock].execute(data)
                     else:
                         _logOut(sock)
-                        socklist.pop(sock)
-                        sock.close()
                 except socket.error, se:
                     if se.args[0] == ECONNRESET:
                         _logOut(sock)
-                        socklist.pop(sock)
-                        sock.close()
+                except KeyError:
+                    # this happens if we drop a client but there's leftover
+                    # data in the socket. the user has already been logged out
+                    # so just ignore it
+                    pass
     
     # if the select() above fails, read/write/error will be invalid names, and the for
     # loop will throw an error.  ignore it and keep looping.                
