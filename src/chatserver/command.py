@@ -2,6 +2,7 @@ import re
 import logging as log
 log.basicConfig(level=log.DEBUG)
 
+# client commands need to be well-formed
 COMMAND_GRAMMAR = {
     "LOGIN": re.compile(r"^\s*(\w+)$"),
     "LOGOUT": re.compile(r"^$"),
@@ -15,12 +16,14 @@ SERVER_COMMANDS = ["GOTROOMMSG",
 
 COMMANDS = COMMAND_GRAMMAR.keys() + SERVER_COMMANDS              
 
+# break a raw string into a command and parameters
 def ParseCommand(rawCmd):
     rawCmd = rawCmd.strip()
     command = rawCmd.split(" ")[0].upper().strip()
     parameters = rawCmd[len(command):].strip()
     return command, parameters
 
+# validate commands based on grammar specified above
 def ValidateCommand(rawCmd):
     try:
         command, parameters = ParseCommand(rawCmd)

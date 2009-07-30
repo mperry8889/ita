@@ -5,14 +5,13 @@ import sys
 import logging as log
 
 from chatserver.client import Client as ChatClient
-from chatserver.client import ACK, ERR, State
+from chatserver.client import ACK, ERR
 from chatserver.server import Server as ChatServer
 from chatserver.command import ValidateCommand
 
 log.basicConfig(level=log.DEBUG)
 
 read_socks = {}
-ignore_socks = {}
 serversock = None
 
 port = 6668
@@ -65,7 +64,6 @@ def loop():
                 
                 chatClient = ChatClient(client)
                 read_socks[client] = chatClient
-                #write_socks[client] = 1#chatClient
                 
             # handle regular input
             else:

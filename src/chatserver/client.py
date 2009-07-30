@@ -13,17 +13,19 @@ def ERR(sobj):
     SEND(sobj, "ERROR")    
 
 
+# this interface creates a stub method for each command in command.py, and 
+# enforces that the client below implements each method correctly.  this is largely
+# useless for this project since the parameters won't ever change, but in the odd event
+# a command is added, this interface will enforce that a handler is added in client code
 class IChatClient(Interface):
-    """This interface forces implementing classes to have a method available to 
-    handle each command a client can send"""
     pass
 
 for cmd in COMMANDS:
     setattr(IChatClient, cmd.upper(), lambda: False)
 
 
+# dumb pass-through client, which just sends commands over to the server
 class Client():
-    """This is a dumb pass-through client.  The complexity is on the server side"""
     implements(IChatClient)
     __sobj = None
     
@@ -34,6 +36,7 @@ class Client():
     def __init__(self, socketObj):
         self.__sobj = socketObj
     
+    # execute a command sent from the client
     def execute(self, cmd):
         command, parameters = ParseCommand(cmd)
         getattr(self, command)(parameters.split(" "))
@@ -41,7 +44,7 @@ class Client():
     def getNickname(self):
         return self.__nickname
     
-    
+    ##
     def LOGIN(self, args):
         nickname = args[0]
         
@@ -56,7 +59,7 @@ class Client():
         except:
             ERR(self.__sobj)
     
-    
+    ##
     def LOGOUT(self, args):
         
         # users can't log out before they're logged in
@@ -72,7 +75,7 @@ class Client():
         
         self.__sobj.close()      
     
-    
+    ##
     def JOIN(self, args):
         channel = args[0]
         
@@ -86,7 +89,7 @@ class Client():
         except:
             ERR(self.__sobj)
 
-    
+    ##
     def PART(self, args):
         channel = args[0]
         
@@ -100,8 +103,7 @@ class Client():
         except:
             ERR(self.__sobj)
         
-    
-    
+    ##    
     def MSG(self, args):
         target = args[0]
         message = " ".join(args[1:])

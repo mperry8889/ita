@@ -2,13 +2,14 @@ import logging as log
 
 log.basicConfig(level=log.DEBUG)
 
+# an instance of this class is exposed, not the class itself.  this is so each
+# client can access the same instance
 class _Server():
+    # these two dicts are the magic behind the chat server
     __users = {}
     __channels = {}
     
-    def __init__(self):
-        pass
-    
+    # log in a user - add it to the __users dict
     def login(self, nick, obj):
         if nick in self.__users.keys():
             raise Exception
@@ -17,6 +18,7 @@ class _Server():
         log.debug("Login: %s" % nick)
     
     
+    # log out a user - remove it from the __users dict
     def logout(self, nick, obj):
         if nick is None: return
         if nick not in self.__users.keys():
@@ -25,6 +27,9 @@ class _Server():
         self.__users.pop(nick)
         log.debug("Logout: %s" % nick)
     
+    
+    # add a user to a channel.  add the user to the list associated
+    # with the channel
     def join(self, nick, channel, obj):
         if self.__channels.has_key(channel):
             self.__channels[channel].append(nick)
@@ -32,6 +37,8 @@ class _Server():
             self.__channels[channel] = [nick]
         log.debug("%s: %s has joined" % (channel, nick))
     
+    
+    # remove a user from a channel's userlist
     def part(self, nick, channel, obj):
         if not self.__channels.has_key(channel):
             raise Exception
@@ -42,12 +49,15 @@ class _Server():
         log.debug("%s: %s has parted" % (channel, nick))
         
 
+    # message handler
     def msg(self, nick, target, message, obj):
         if '#' in target:
             self.__msg_channel(nick, target, message, obj)
         else:
             self.__msg_user(nick, target, message, obj)
     
+
+    # send a message to everyone in a channel
     def __msg_channel(self, nick, channel, message, obj):
         if not self.__channels.has_key(channel):
             raise Exception
@@ -58,13 +68,15 @@ class _Server():
             self.__users[user].GOTROOMMSG([nick, channel, message])
         log.debug("%s: <%s> %s" % (channel, nick, message))
         
-          
+
+    # send a message to a single user          
     def __msg_user(self, nick, target, message, obj):
         if nick not in self.__users.keys():
             raise Exception
         
         self.__users[target].GOTUSERMSG([nick, message])
         log.debug("%s -> %s: %s" % (nick, target, message))
-        
 
+
+# create a _Server instance and expose it
 Server = _Server()
