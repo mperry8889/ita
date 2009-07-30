@@ -1,0 +1,30 @@
+Matt Perry
+matt@unshift.net
+
+This is a simple chat server and a little bit of test code.
+
+Requirements:
+zope.interface - this isn't really necessary, but is in for good measure and to show off.  To get rid 
+of it, comment out IChatClient and the implements(IChatClient) lines in client.py.
+
+This is a single-threaded server using asynchronous IO and select().  The main loop reads in data
+from users and dispatches commands accordingly.  It is made to be both simple and decently-performing.
+Use of something like the Twisted framework would build in automatic robustness and remove a lot of the
+complexity -- note the simplicity of the chatserver.* package compared to the complexity and detail of
+the main looping code.
+
+Load and scaling-related failures will probably be due to the system running out of file descriptors,
+or something else equally silly.  I tried to get the server to be pretty robust against shenanigans
+so far as connections go, but it's probably not totally bulletproof.
+
+The chat server itself is pretty straightforward: it's a dictionary of users and a dictionary of channels.
+The client code is very simple, and mostly just passes commands though to manipulate the server.
+
+Most of the testing for correctness was done by hand with nc, and I wrote some test code to automate a few
+more complex scenarios.  By no means is this comprehensive test coverage -- the tests are for my own
+use to hunt out bugs, and not to verify that things continue to work over time and through revisions.
+Since this is a small, simple project, I think this is reasonable.
+
+I would have written some better test code, but I just couldn't go through writing another select loop 
+for it.  If I were using Twisted I would have something much better, but given how annoying it is to
+use threads I kept tests fairly simple.
