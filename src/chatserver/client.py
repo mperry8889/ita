@@ -112,7 +112,7 @@ class Client():
             return
         
         # we won't ACK this on this side - the server has to do it,
-        # before it fires the callback.  kinda of lame and sphagetti like
+        # before it fires the callback.  kind of lame and sphagetti like
         try:
             Server.msg(self.__nickname, target, message, self)
         except:

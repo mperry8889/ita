@@ -15,7 +15,7 @@ log.basicConfig(level=log.DEBUG)
 socklist = {}
 serversock = None
 
-port = 6668
+port = 6667
 
 def _logOut(sock):
     ChatServer.logout(socklist[sock].getNickname(), socklist[sock])
