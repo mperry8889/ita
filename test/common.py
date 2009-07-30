@@ -1,7 +1,7 @@
 import socket
 
 server = "127.0.0.1"
-port = 6668
+port = 6667
 
 def connect():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
