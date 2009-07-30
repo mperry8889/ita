@@ -23,7 +23,8 @@ The client code is very simple, and mostly just passes commands though to manipu
 Most of the testing for correctness was done by hand with nc, and I wrote some test code to automate a few
 more complex scenarios.  By no means is this comprehensive test coverage -- the tests are for my own
 use to hunt out bugs, and not to verify that things continue to work over time and through revisions.
-Since this is a small, simple project, I think this is reasonable.
+I skipped using pyUnit or another test framework for this very reason.  Since this is a small, simple
+project, I think this is reasonable.
 
 I would have written some better test code, but I just couldn't go through writing another select loop 
 for it.  If I were using Twisted I would have something much better, but given how annoying it is to

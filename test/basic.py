@@ -18,11 +18,11 @@ def NormalOp(i):
     
 
 # normal operation
-for i in range(0, 000):
+for i in range(0, 5000):
     NormalOp(i)
     
 # quit by just closing the connection
-for i in range(0, 000):
+for i in range(0, 5000):
     sock = connect()
     sendCmd(sock, "LOGIN foo%d\r\n" % i)
     sendCmd(sock, "JOIN #foo\r\n")
@@ -31,5 +31,6 @@ for i in range(0, 000):
     disconnect(sock)
 
 # 50 threads all connecting and operating normally
-for i in range(0, 250):
-    Thread(target=NormalOp, args=(i,)).start()
+for j in range(0, 100):
+    for i in range(0, 250):
+        Thread(target=NormalOp, args=(i,)).start()
