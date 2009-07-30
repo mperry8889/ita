@@ -3,9 +3,8 @@ matt@unshift.net
 
 This is a simple chat server and a little bit of test code.
 
-Requirements:
-zope.interface - this isn't really necessary, but is in for good measure and to show off.  To get rid 
-of it, comment out IChatClient and the implements(IChatClient) lines in client.py.
+Note that there's some commented out code in client.py which requires zope.interface. I don't know
+if it's allowed or disallowed but it's good practice to have it in the code.
 
 This is a single-threaded server using asynchronous IO and select().  The main loop reads in data
 from users and dispatches commands accordingly.  It is made to be both simple and decently-performing.
