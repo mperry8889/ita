@@ -24,7 +24,8 @@ def _logOut(sock):
 def _listen(port):
     fd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     fd.bind(('', port))
-    fd.listen(512)
+    fd.listen(1024)  # this is a ridiculous number but allows tons of 
+                     # clients to connect simultaneously
     fd.setblocking(False)
     return fd
 
