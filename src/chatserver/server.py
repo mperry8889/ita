@@ -1,6 +1,7 @@
+from common import ACK, ERR, SEND
 import logging as log
 
-log.basicConfig(level=log.DEBUG)
+log.basicConfig(level=log.INFO)
 
 # an instance of this class is exposed, not the class itself.  this is so each
 # client can access the same instance
@@ -11,6 +12,8 @@ class _Server():
     
     # log in a user - add it to the __users dict
     def login(self, nick, obj):
+        if nick is None:
+            raise Exception
         if nick in self.__users.keys():
             raise Exception
         
@@ -24,6 +27,14 @@ class _Server():
         if nick not in self.__users.keys():
             raise Exception
         
+        # part all channels as well. searching takes a while
+        # so just iterate over the full list of channels, part the user,
+        # and ignore any exceptions
+        for channel in self.__channels.keys():
+            try:
+                self.part(nick, channel, obj)
+            except:
+                pass
         self.__users.pop(nick)
         log.debug("Logout: %s" % nick)
     
@@ -45,7 +56,9 @@ class _Server():
         if nick not in self.__channels[channel]:
             raise Exception
         
-        self.__channels[channel].pop(nick)
+        self.__channels[channel].remove(nick)
+        if self.__channels[channel] == []:
+            self.__channels.pop(channel)
         log.debug("%s: %s has parted" % (channel, nick))
         
 
@@ -64,6 +77,9 @@ class _Server():
         if nick not in self.__channels[channel]:
             raise Exception
         
+        # we have to ACK here before the callback gets fired, so the user
+        # knows the command was OK
+        ACK(obj.getSocketObj())
         for user in self.__channels[channel]:
             self.__users[user].GOTROOMMSG([nick, channel, message])
         log.debug("%s: <%s> %s" % (channel, nick, message))
@@ -74,6 +90,7 @@ class _Server():
         if nick not in self.__users.keys():
             raise Exception
         
+        ACK(obj.getSocketObj())
         self.__users[target].GOTUSERMSG([nick, message])
         log.debug("%s -> %s: %s" % (nick, target, message))
 

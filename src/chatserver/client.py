@@ -1,16 +1,8 @@
 from server import Server
+from common import ACK, ERR, SEND
 from command import COMMANDS
 from command import ParseCommand
 from zope.interface import Interface, implements
-
-def SEND(sobj, msg):
-    sobj.send(msg.strip() + r"\r\n")
-
-def ACK(sobj):
-    SEND(sobj, "OK")
-    
-def ERR(sobj):
-    SEND(sobj, "ERROR")    
 
 
 # this interface creates a stub method for each command in command.py, and 
@@ -41,6 +33,9 @@ class Client():
         command, parameters = ParseCommand(cmd)
         getattr(self, command)(parameters.split(" "))
     
+    def getSocketObj(self):
+        return self.__sobj
+    
     def getNickname(self):
         return self.__nickname
     
@@ -65,6 +60,7 @@ class Client():
         # users can't log out before they're logged in
         if self.__nickname is None:
             ERR(self.__sobj)
+            return
             
         try:
             Server.logout(self.__nickname, self)
@@ -73,7 +69,7 @@ class Client():
         except:
             ERR(self.__sobj) 
         
-        self.__sobj.close()      
+        self.__sobj.close()  
     
     ##
     def JOIN(self, args):
@@ -82,6 +78,7 @@ class Client():
         # can't join a channel if not logged in
         if self.__nickname is None:
             ERR(self.__sobj)
+            return
         
         try:
             Server.join(self.__nickname, channel, self)
@@ -96,6 +93,7 @@ class Client():
         # can't part a channel if not logged in
         if self.__nickname is None:
             ERR(self.__sobj)
+            return
         
         try:
             Server.part(self.__nickname, channel, self)
@@ -111,10 +109,12 @@ class Client():
         # can't send a message if not logged in
         if self.__nickname is None:
             ERR(self.__sobj)
+            return
         
+        # we won't ACK this on this side - the server has to do it,
+        # before it fires the callback.  kinda of lame and sphagetti like
         try:
             Server.msg(self.__nickname, target, message, self)
-            ACK(self.__sobj)
         except:
             ERR(self.__sobj)
     
