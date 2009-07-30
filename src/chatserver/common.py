@@ -5,4 +5,7 @@ def ACK(sobj):
     SEND(sobj, "OK")
     
 def ERR(sobj):
-    SEND(sobj, "ERROR")  
+    SEND(sobj, "ERROR")
+
+def ERRMSG(sobj, msg):
+    SEND(sobj, "ERROR %s" % msg)  

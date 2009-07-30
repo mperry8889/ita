@@ -52,7 +52,7 @@ def SenderClient(nick):
     sock.close()
 
 # repeat this whole scenario 10 times    
-for j in range(0, 50):
+for j in range(0, 5000):
     print "starting %d threads..." % threads
     for i in range(1, threads):
         nick="thread%d" % i

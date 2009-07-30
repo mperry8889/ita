@@ -13,10 +13,10 @@ class _Server():
     # log in a user - add it to the __users dict
     def login(self, nick, obj):
         if nick is None:
-            raise Exception
+            raise Exception, "Not logged in"
         if nick in self.__users.keys():
-            raise Exception
-        
+            raise Exception, "Already logged in"
+
         self.__users[nick] = obj
         log.debug("Login: %s" % nick)
     
@@ -25,7 +25,7 @@ class _Server():
     def logout(self, nick, obj):
         if nick is None: return
         if nick not in self.__users.keys():
-            raise Exception
+            raise Exception, "Not logged in"
         
         # part all channels as well. searching takes a while
         # so just iterate over the full list of channels, part the user,
@@ -43,7 +43,10 @@ class _Server():
     # with the channel
     def join(self, nick, channel, obj):
         if self.__channels.has_key(channel):
-            self.__channels[channel].append(nick)
+            if nick in self.__channels[channel]:
+                raise Exception, "Already in %s" % channel
+            else:
+                self.__channels[channel].append(nick)
         else:
             self.__channels[channel] = [nick]
         log.debug("%s: %s has joined" % (channel, nick))
@@ -52,9 +55,9 @@ class _Server():
     # remove a user from a channel's userlist
     def part(self, nick, channel, obj):
         if not self.__channels.has_key(channel):
-            raise Exception
+            raise Exception, "Not in %s" % channel
         if nick not in self.__channels[channel]:
-            raise Exception
+            raise Exception, "Not in %s" % channel
         
         self.__channels[channel].remove(nick)
         if self.__channels[channel] == []:
@@ -73,9 +76,9 @@ class _Server():
     # send a message to everyone in a channel
     def __msg_channel(self, nick, channel, message, obj):
         if not self.__channels.has_key(channel):
-            raise Exception
+            raise Exception, "Not in %s" % channel
         if nick not in self.__channels[channel]:
-            raise Exception
+            raise Exception, "Not in %s" % channel
         
         # we have to ACK here before the callback gets fired, so the user
         # knows the command was OK
@@ -88,7 +91,9 @@ class _Server():
     # send a message to a single user          
     def __msg_user(self, nick, target, message, obj):
         if nick not in self.__users.keys():
-            raise Exception
+            raise Exception, "Not logged in"
+        if target not in self.__users.keys():
+            raise Exception, "No such user"
         
         ACK(obj.getSocketObj())
         self.__users[target].GOTUSERMSG([nick, message])

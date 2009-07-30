@@ -6,7 +6,7 @@ import select
 import logging as log
 
 from chatserver.client import Client as ChatClient
-from chatserver.client import ERR
+from chatserver.client import ERRMSG
 from chatserver.server import Server as ChatServer
 from chatserver.command import ValidateCommand
 
@@ -79,7 +79,7 @@ def loop():
                         if len(data) == 1024:
                             _logOut(sock)
                         if not ValidateCommand(data):
-                            ERR(sock)
+                            ERRMSG(sock, "Invalid command")
                         else:
                             socklist[sock].execute(data)
                     else:
