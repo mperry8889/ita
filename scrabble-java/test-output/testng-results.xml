@@ -1,0 +1,20 @@
+<testng-results>
+  <reporter-output>
+  </reporter-output>
+  <suite name="ita-scrabble-matt_perry">
+    <groups>
+    </groups>
+    <test name="com.itasoftware.puzzles.scrabble.Tests">
+      <class name="com.itasoftware.puzzles.scrabble.Tests">
+        <test-method status="PASS" signature="GivenExample()" name="GivenExample" duration-ms="9" started-at="2010-01-03T18:37:47Z" finished-at="2010-01-03T18:37:47Z">
+        </test-method>
+        <test-method status="PASS" signature="NontEnoughLetters()" name="NontEnoughLetters" duration-ms="1" started-at="2010-01-03T18:37:47Z" finished-at="2010-01-03T18:37:47Z">
+        </test-method>
+        <test-method status="PASS" signature="SimpleDuplicates()" name="SimpleDuplicates" duration-ms="2" started-at="2010-01-03T18:37:47Z" finished-at="2010-01-03T18:37:47Z">
+        </test-method>
+        <test-method status="PASS" signature="WeirdBug()" name="WeirdBug" duration-ms="2" started-at="2010-01-03T18:37:47Z" finished-at="2010-01-03T18:37:47Z">
+        </test-method>
+      </class>
+    </test>
+  </suite>
+</testng-results>

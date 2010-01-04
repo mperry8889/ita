@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.itasoftware.puzzles.scrabble.Tests" failures="0" tests="4" time="0.037" errors="0">
+  <properties/>
+  <testcase name="GivenExample" time="0.0090" classname="com.itasoftware.puzzles.scrabble.Tests"/>
+  <testcase name="NontEnoughLetters" time="0.0010" classname="com.itasoftware.puzzles.scrabble.Tests"/>
+  <testcase name="SimpleDuplicates" time="0.0020" classname="com.itasoftware.puzzles.scrabble.Tests"/>
+  <testcase name="WeirdBug" time="0.0020" classname="com.itasoftware.puzzles.scrabble.Tests"/>
+</testsuite>
