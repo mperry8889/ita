@@ -2,7 +2,7 @@ from server import Server
 from common import ACK, ERR, ERRMSG, SEND
 from command import COMMANDS
 from command import ParseCommand
-from zope.interface import Interface, implements
+#from zope.interface import Interface, implements
 
 
 # this interface creates a stub method for each command in command.py, and 
